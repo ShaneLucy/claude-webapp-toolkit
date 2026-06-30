@@ -40,13 +40,20 @@ Or if your repository already has a `.claude` directory, add the submodule into 
 git submodule add https://github.com/shanelucy/claude-webapp-toolkit .claude/toolkit
 ```
 
-Then create symlinks so Claude Code discovers the agents and skills under `.claude/`:
+Then create symlinks so Claude Code discovers the agents, skills, and delegation instructions under `.claude/`:
 
 **macOS / Linux**
 ```bash
 ln -s toolkit/agents .claude/agents
 ln -s toolkit/skills .claude/skills
 ```
+
+If `.claude/CLAUDE.md` does not already exist, symlink it too:
+```bash
+ln -s toolkit/CLAUDE.md .claude/CLAUDE.md
+```
+
+If `.claude/CLAUDE.md` already exists, append the delegation instructions from `toolkit/CLAUDE.md` to it instead of symlinking.
 
 **Windows (PowerShell — requires Developer Mode or admin)**
 ```powershell
@@ -55,6 +62,12 @@ if (Test-Path .claude\agents) { Remove-Item -Recurse -Force .claude\agents }
 if (Test-Path .claude\skills) { Remove-Item -Recurse -Force .claude\skills }
 New-Item -ItemType SymbolicLink -Path .claude\agents -Target .claude\toolkit\agents
 New-Item -ItemType SymbolicLink -Path .claude\skills -Target .claude\toolkit\skills
+
+# Symlink CLAUDE.md only if one doesn't already exist
+if (-not (Test-Path .claude\CLAUDE.md)) {
+    New-Item -ItemType SymbolicLink -Path .claude\CLAUDE.md -Target .claude\toolkit\CLAUDE.md
+}
+# If .claude\CLAUDE.md already exists, manually append the delegation table from toolkit\CLAUDE.md
 ```
 
 Commit the symlinks alongside the submodule so all contributors get the same layout automatically:
@@ -66,9 +79,11 @@ git commit -m "Add claude-webapp-toolkit submodule with agent and skill symlinks
 
 ### How agents and skills are loaded
 
-Claude Code automatically discovers agents in `.claude/agents/` and skills in `.claude/skills/`. Each agent's frontmatter declares which skills it reads at task start — no manual wiring required.
+Claude Code discovers agents in `.claude/agents/` and skills in `.claude/skills/`. The toolkit's `CLAUDE.md` (read as `.claude/CLAUDE.md`) tells Claude to delegate tasks to the appropriate specialist agent rather than handling them inline.
 
-The agents are self-contained: each one describes when it should be used (its `description` field), what model to run on, and what skills to load. Claude selects the right agent automatically based on the task context.
+**This delegation instruction is the critical piece.** Without it, Claude may handle TypeScript, SvelteKit, or UI tasks itself instead of invoking the specialist agents — especially in projects that already have their own agents or CLAUDE.md. Claude Code reads CLAUDE.md files from the project root, `.claude/`, and subdirectories additively, so the toolkit's `CLAUDE.md` stacks with any existing project instructions without conflict.
+
+Once delegated, each agent reads its relevant skill files as a mandatory first step before producing any output.
 
 ### Updating the submodule
 
