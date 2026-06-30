@@ -70,6 +70,10 @@ At the start of every task, read `.claude/skills/ui-design.md` to load your desi
    - [ ] Screen reader announcements are correct
    - [ ] Forced-colors mode tested
 
+## IDE Diagnostics
+
+After editing component files (`.svelte`, `.html`, `.css`, `.ts`), use `mcp__ide__getDiagnostics` (fetch schema with ToolSearch first: `select:mcp__ide__getDiagnostics`) to catch syntax errors and linting issues before finalising. Fix any errors before considering the task complete.
+
 ## Code Review Mode
 
 When reviewing front-end code:
