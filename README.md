@@ -32,13 +32,35 @@ Reference documents that agents load at the start of relevant tasks to apply con
 git submodule add https://github.com/shanelucy/claude-webapp-toolkit .claude
 ```
 
-Or if your repository already has a `.claude` directory:
+Or if your repository already has a `.claude` directory, add the submodule into a subdirectory and symlink its contents:
 
 ```bash
 git submodule add https://github.com/shanelucy/claude-webapp-toolkit .claude/toolkit
 ```
 
-Then symlink or copy the `agents/` and `skills/` directories into `.claude/` so Claude Code picks them up.
+Then create symlinks so Claude Code discovers the agents and skills under `.claude/`:
+
+**macOS / Linux**
+```bash
+ln -s toolkit/agents .claude/agents
+ln -s toolkit/skills .claude/skills
+```
+
+**Windows (PowerShell — requires Developer Mode or admin)**
+```powershell
+# Remove existing directories if present, then create symlinks
+if (Test-Path .claude\agents) { Remove-Item -Recurse -Force .claude\agents }
+if (Test-Path .claude\skills) { Remove-Item -Recurse -Force .claude\skills }
+New-Item -ItemType SymbolicLink -Path .claude\agents -Target .claude\toolkit\agents
+New-Item -ItemType SymbolicLink -Path .claude\skills -Target .claude\toolkit\skills
+```
+
+Commit the symlinks alongside the submodule so all contributors get the same layout automatically:
+
+```bash
+git add .claude/agents .claude/skills .gitmodules .claude/toolkit
+git commit -m "Add claude-webapp-toolkit submodule with agent and skill symlinks"
+```
 
 ### How agents and skills are loaded
 
