@@ -24,6 +24,10 @@ Before reporting a change as complete, verify it is acceptable by running tests,
 
 All three must pass without errors before the task is considered done.
 
+## Test Layout
+
+Unit tests live in a `test/` directory at the project root. The directory structure inside `test/` must mirror the source directory exactly — a test for `src/lib/utils/format.ts` goes in `test/lib/utils/format.test.ts`.
+
 ## Coding Standards
 
 All code in this project follows these control flow principles regardless of agent:
