@@ -11,6 +11,8 @@ This project includes specialist agents. **Always delegate to these agents rathe
 
 When a request clearly falls within one of these domains, use the Agent tool to delegate immediately — do not attempt the work inline.
 
+**Never spawn multiple agents in parallel.** Always run one agent at a time and wait for it to complete before starting the next. This allows the user to review and verify each change before proceeding.
+
 ## Verification
 
 Before reporting a change as complete, verify it is acceptable by running tests, static analysis checks, and the build. Read `package.json` to find the exact script commands — do not guess or hardcode them.
