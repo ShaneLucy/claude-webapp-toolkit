@@ -50,6 +50,8 @@ Before finalising, confirm:
 3. Forms have `use:enhance`; validation uses `fail()`, not `throw`
 4. No browser globals outside `$effect` or `browser` guard
 5. Diagnostics checked via `mcp__ide__getDiagnostics` — zero errors
+6. Early returns used for guards in load functions and actions — no `else` after `throw error()` or `return fail()`
+7. No magic numbers or magic strings — all literals extracted into named constants
 
 ## Persistent Agent Memory
 

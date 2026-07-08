@@ -22,7 +22,9 @@ Reference this document at the start of every TypeScript task to apply consisten
 - Composition over inheritance — build behaviour by combining small functions, not deep class hierarchies.
 - Define contracts (interfaces) before implementing them.
 - Keep functions short: if a function exceeds ~25 lines, consider decomposition.
-- Avoid deep nesting — use early returns and guard clauses.
+- **Prefer early returns and guard clauses** over `if/else` and `else if` chains. Check preconditions at the top of a function; return, throw, or `continue` immediately on failure; keep the happy path as the final unindented statement.
+- Never write an `else` or `else if` branch after a `return`, `throw`, or `continue` — it adds indentation for no benefit.
+- Avoid deep nesting — flatten control flow with early exits rather than nested branches.
 - Isolate side effects; prefer pure functions where possible.
 - Use dependency injection over direct instantiation to enable testability.
 - Avoid barrel exports (`index.ts` re-exports) unless the public API is intentionally stable — they obscure what is actually used.
@@ -35,7 +37,7 @@ Reference this document at the start of every TypeScript task to apply consisten
 - Boolean names use `is`, `has`, `can`, `should` prefixes: `isLoading`, `hasError`, `canSubmit`.
 - Verbs for functions (`fetchUser`, `parseDate`), nouns for types (`UserProfile`, `DateRange`).
 - Avoid abbreviations — `usr`, `cfg`, `mgr` cost nothing to expand.
-- Extract magic numbers and strings into named constants with explanatory names.
+- **Never use magic numbers or magic strings.** Extract every literal value into a named constant at module or file scope with an explanatory name. `const MAX_RETRY_ATTEMPTS = 3` is always preferable to `3` scattered through logic.
 
 ## Error Handling
 
@@ -85,3 +87,5 @@ Before finalising code, verify:
 - [ ] No unused variables, parameters, or imports
 - [ ] Tests: every assertion is meaningful and would catch a real regression
 - [ ] Pattern usage is justified — no over-engineering
+- [ ] No `else`/`else if` after a `return`, `throw`, or `continue` — control flow is flattened with early exits
+- [ ] No magic numbers or magic strings — all literals extracted into named constants

@@ -179,6 +179,32 @@ Global handler: `export const handleServerError: HandleServerError` in `hooks.se
 
 ---
 
+## Control Flow
+
+Prefer early returns and defensive guards in load functions, actions, and API routes. Validate preconditions first; keep the happy path as the final unindented statement. Never write an `else` branch after `throw error()`, `return fail()`, or `redirect()`.
+
+```typescript
+// Preferred — guard at the top, happy path last
+export const load: PageServerLoad = async ({ params, locals }) => {
+  if (!locals.user) throw error(401, 'Unauthorized');
+  const post = await db.post.findUnique({ where: { slug: params.slug } });
+  if (!post) throw error(404, 'Not found');
+  return { post };
+};
+
+// Avoid — unnecessary else after throw
+export const load: PageServerLoad = async ({ params }) => {
+  const post = await db.post.findUnique({ where: { slug: params.slug } });
+  if (post) {
+    return { post };
+  } else {
+    throw error(404, 'Not found');
+  }
+};
+```
+
+---
+
 ## TypeScript Patterns
 
 ```typescript
@@ -260,6 +286,7 @@ it('returns 422 when email is missing', async () => {
 
 ## Self-Review Checklist
 
+- [ ] No magic numbers or magic strings — all literals extracted into named constants
 - [ ] No Svelte 4 patterns: no `export let`, `on:event`, `$:`, `<slot>`
 - [ ] All props typed via `$props()` with an explicit `Props` interface
 - [ ] `$derived` used for computed values — not `$effect`

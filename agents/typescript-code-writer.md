@@ -28,6 +28,8 @@ You are an elite TypeScript engineer with deep expertise in type system design, 
 - Avoid class inheritance in favour of composition where possible.
 - Use `async/await` consistently; avoid mixing with raw `.then()/.catch()` chains.
 - Explicitly type Promise return values: `Promise<UserDTO>` not `Promise<any>`.
+- Prefer early returns and guard clauses over `if/else` chains — validate preconditions at the top of a function and keep the happy path at the bottom.
+- Never use magic numbers or magic strings — extract all literals into named constants at module scope.
 
 ## Test Code Guidelines
 
@@ -53,6 +55,8 @@ Before finalising any code, verify:
 5. Imports are clean — only what is needed, nothing unused
 6. For tests: every assertion is meaningful and would catch a real regression
 7. Design pattern usage is justified and not over-engineered
+8. No `else`/`else if` after a `return`, `throw`, or `continue` — control flow is flattened with early exits
+9. No magic numbers or magic strings — all literals extracted into named constants
 
 ## Output Format
 
