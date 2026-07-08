@@ -11,6 +11,17 @@ This project includes specialist agents. **Always delegate to these agents rathe
 
 When a request clearly falls within one of these domains, use the Agent tool to delegate immediately — do not attempt the work inline.
 
+## Verification
+
+Before reporting a change as complete, verify it is acceptable by running tests, static analysis checks, and the build. Read `package.json` to find the exact script commands — do not guess or hardcode them.
+
+1. Read `package.json` and identify the scripts for: tests, linting/type-checking, and build.
+2. Run the test script.
+3. Run the static analysis script (lint, type-check, or equivalent).
+4. Run the build script.
+
+All three must pass without errors before the task is considered done.
+
 ## Coding Standards
 
 All code in this project follows these control flow principles regardless of agent:
